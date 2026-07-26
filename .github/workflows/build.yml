@@ -1,6 +1,9 @@
-name: Build Windows Executable
+name: Build and Release Windows Executable
 
-on: [push]
+on:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -24,8 +27,9 @@ jobs:
       run: |
         pyinstaller --onefile esporta_excel.py
 
-    - name: Upload executable
-      uses: actions/upload-artifact@v4
+    - name: Create GitHub Release and Upload Asset
+      uses: softprops/action-gh-release@v2
       with:
-        name: SerieA-Engine-Windows
-        path: dist/esporta_excel.exe
+        files: dist/esporta_excel.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
